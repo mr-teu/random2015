@@ -23,6 +23,15 @@
        :y2  (- (:height canvas-size) height )
        :stroke "red"
        :strokeWidth "1"}))
+
+(defn pol-line [fx i f]
+  (let [inicio (str "M" i " " (fx i) " ")
+        linea (reduce #(str %1 "L" %2  " " (fx %2) " ") ""(range i f .2)) ]
+    (dom/path #js{:d (str inicio linea)
+                  :fill "none"
+                  
+                  :stroke "red"})))
+
 (defn line [points]
   (dom/polyline
    #js{ :stroke "red" :strokeWidth "1" :fill "none" :points (apply str(map #(let [[x y] %] (str x ","y " " ))  points))}))
@@ -41,11 +50,9 @@
 (om/root
  (fn [app owner]
    (apply dom/svg #js{:width (canvas-size :width) :height (canvas-size :height)}
-          
-          (into [(line (mapv #(vector % (+ 80 (* 50 (Math/sin %)))  ) (range 1 200 10)))] 
-                (map #(circle (* % 10) (+ 200 (* 30 (Math/sin %))) .5 "blue") (range 1 200 .005))
-                  )
-          ))
+           
+          (into [(pol-line #(+ 50 (* 10 (Math/sin %))) 1 100)] 
+                [])))
  app-state
  {:target (. js/document (getElementById "app"))})
 
