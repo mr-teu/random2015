@@ -28,20 +28,19 @@
   (let [
         x-scale (/ width (- (apply max xs) (apply min xs)))
         y-scale (/ height (- (apply max ys) (apply min ys)))
-        x1 (+ 0 (* x-scale (first xs)))
-        xi (+ x0 (* x-scale (first xs)))
-        y1 (+ 0 (* y-scale (first ys)))
-        yi  (+ y0 (- height (* y-scale (first ys))))
-       inicio (str "M" xi " " yi " ")
+        inicio (str "M" xi " " yi " ")
         x-pxfn (fn [x] (+ (* x x-scale)  x0 ))
         y-pxfn (fn [y] (+ (- height (* y y-scale)) y0 ))
+        xi (x-pxfn (first xs))
+        yi  (y-pxfn (first ys))
         linea (reduce #(str %1  %2) 
                       "L" (map #(str (x-pxfn %1) " " (y-pxfn %2) " ") xs ys)) ]
-   
     (dom/path #js{:d (str inicio linea)
                   :fill "none"
                   :style #js{:stroke "#BBCCCC" :stroke-width "2pt" :stroke-opacity .9}
                   :stroke "red"})))
+(defn draw-line [f {:keys [x0 y0 width height]}]
+  (prn "ha"))
 
 (defn line [points]
   (dom/polyline
@@ -63,9 +62,9 @@
    (apply dom/svg #js{:width (canvas-size :width) :height (canvas-size :height)}
            
           (into [(pol-line {:x0 1 :y0 100 
-                            :width 800 :height 90 
-                            :xs [0 1 2 3 4]
-                            :ys [(rand-int 50)(rand-int 5)(rand-int 50)(rand-int 5)(rand-int 50)]})] 
+                            :width 200 :height 90 
+                            :xs [0 1 2 3 4 7]
+                            :ys [50 5 25 1 0 9]})] 
                 [])))
  app-state
  {:target (. js/document (getElementById "app"))})
